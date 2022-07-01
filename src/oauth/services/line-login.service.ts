@@ -12,7 +12,7 @@ export class LineLoginService {
   accessTokenUrl = 'https://api.line.me/oauth2/v2.1/token';
   profileUrl = 'https://api.line.me/v2/profile';
   revokeUrl = 'https://api.line.me/oauth2/v2.1/revoke';
-  redirectUrl = 'http://localhost:3000/oauth/lineLogin/callback';
+  redirectUrl = '';
   grant_type = 'code';
   clientId = '';
   clientSecret = '';
@@ -25,6 +25,7 @@ export class LineLoginService {
   ) {
     this.clientId = this.configService.get('lineLoginClientId');
     this.clientSecret = this.configService.get('lineLoginSecret');
+    this.redirectUrl = this.configService.get('lineLoginCallback');
   }
 
   getOauthUrl(): string {

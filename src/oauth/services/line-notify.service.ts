@@ -12,7 +12,7 @@ export class LineNotifyService {
   messageUrl = 'https://notify-api.line.me/api/notify';
   clientId = '';
   clientSecret = '';
-  redirectUrl = 'http://localhost:3000/oauth/lineNotify/callback';
+  redirectUrl = '';
   grant_type = 'code';
   state = '123';
   scope = 'notify';
@@ -23,6 +23,7 @@ export class LineNotifyService {
   ) {
     this.clientId = this.configService.get('lineNotifyClientId');
     this.clientSecret = this.configService.get('lineNotifySecret');
+    this.redirectUrl = this.configService.get('lineNotifyCallback');
   }
 
   getOauthUrl(): string {
