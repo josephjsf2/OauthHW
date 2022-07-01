@@ -1,4 +1,4 @@
-import { UserService } from './../../user.service';
+import { UserService } from '../../user.service';
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()

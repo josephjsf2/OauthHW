@@ -1,0 +1,40 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title Line Notify Connecting Successfully
+    link(rel='stylesheet', href='/assets/css/bulma.min.css')
+    link(rel='stylesheet', href="https://bulma.io/vendor/fontawesome-free-5.15.2-web/css/all.min.css")
+  body
+    div.container.is-max-desktop
+        article.message.is-success
+            div.message-body
+                span#resultMessage
+
+        div.control
+            input.input(type="text" placeholder="message")
+            button.button.is-primary(onclick='sendMessage()') Send Message
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+       
+script.
+
+    async function sendMessage(){
+        const message = document.querySelector('input').value;
+        if(!message){
+            return
+        }
+        const result = await axios.post('/oauth/sendMessage', {message})
+        if(result.data.success){
+            document.querySelector('input').value = ''
+            document.querySelector('article').classList.remove('is-danger')
+            document.querySelector('article').classList.add('is-error')
+            document.querySelector('#resultMessage').innerHTML = 'Message has been sent.'
+        }else{
+            document.querySelector('article').classList.remove('is-success')
+            document.querySelector('article').classList.add('is-danger')
+            document.querySelector('#resultMessage').innerHTML = 'Oops! Something went wrong.'
+        }
+    }
