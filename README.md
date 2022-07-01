@@ -14,7 +14,7 @@ LINE_NOTIFY_CALLBACK=Line notify callback url
 ```
 
 安裝：
-程式運作在Nodejs上，同時需要在本機電腦上安裝 NestJS Cli，[官網](https://docs.nestjs.com/)
+程式運作在Nodejs上，同時需要在本機電腦上安裝 NestJS Cli，[官網](https://docs.nestjs.com/)<br/>
 程式沒有實作持久化的機制，所以服務重啟後，所有註冊的資料便會消失。
 
 ```
