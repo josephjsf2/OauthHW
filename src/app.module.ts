@@ -1,3 +1,4 @@
+import { AdminGoogleLoginService } from './oauth/services/admin-google-login.service';
 import { LineNotifyService } from './oauth/services/line-notify.service';
 import { OauthController } from './oauth/controllers/oauth.controller';
 import { Module } from '@nestjs/common';
@@ -9,6 +10,8 @@ import { UserService } from './user.service';
 import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import appConfig from './app.config';
+import { GoogleLoginService } from './oauth/services/google-login.service';
+import { AdminOauthController } from './oauth/controllers/admin-oauth.controller';
 
 const BASE_DIR_CFG = () => ({
   rootDir: join(__dirname, '..'),
@@ -28,7 +31,13 @@ const BASE_DIR_CFG = () => ({
       isGlobal: true,
     }),
   ],
-  controllers: [OauthController, AppController],
-  providers: [UserService, LineLoginService, LineNotifyService],
+  controllers: [OauthController, AppController, AdminOauthController],
+  providers: [
+    UserService,
+    LineLoginService,
+    LineNotifyService,
+    GoogleLoginService,
+    AdminGoogleLoginService,
+  ],
 })
 export class AppModule {}

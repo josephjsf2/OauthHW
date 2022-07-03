@@ -12,31 +12,44 @@ html
     div.container.is-max-desktop
       div.notification.is-primary
         if !user
-          button.button(onclick='lineLogin()')
+          p 登入所提供之資料僅作為測試使用，無其他用途。
+          button.button(onclick='login("LINE")')
             span.icon
               img(src="/assets/images/btn_base.png", alt="logo" )
             span Line Login
+          button.button(onclick='login("GOOGLE")')
+            span Google Login
         else
-          p Hello #{user.displayName} 
+          p Hello #{user.name} (#{user.email})
             a(onclick='logout()') (登出)
           div.buttons
-          if !isLineNotifyConnected
-            button.button.is-primary.is-light(onclick='connectLineNotify()') 連動Line Notify
-          else 
-            button.button.is-link.is-light(onclick='unconnectLineNotify()') 取消連動
+            if !isLineNotifyConnected
+              button.button.is-primary.is-light(onclick='login("NOTIFY")') 連動Line Notify
+            else 
+              button.button.is-link.is-light(onclick='unconnectLineNotify()') 取消連動
+            if user.googleAccountId && user.registerSource!='GOOGLE' 
+              button.button.is-primary.is-light(onclick='unlinkAccount("GOOGLE")') 取消連結 Google 登入
+            else if user.registerSource!='GOOGLE'  
+              button.button.is-primary.is-light(onclick='login("GOOGLE")') 連結 Google 登入
+            if user.lineAccountId && user.registerSource!='LINE'
+              button.button.is-link.is-light(onclick='unlinkAccount("LINE")') 取消連結Line 登入
+            else if user.registerSource!='LINE'
+              button.button.is-link.is-light(onclick='login("LINE")') 連結Line 登入
+              
+
         
       
 script.
-  function lineLogin(){
-    location.href='/oauth/lineLogin';
+  function unlinkAccount(type){
+    location.href='/oauth/unlinkAccount?type=' + type;
+  }
+
+  function login(type){
+    location.href='/oauth/login?type=' + type;
   }
 
   function logout(){
     location.href='/oauth/logout';
-  }
-
-  function connectLineNotify(){
-    location.href='/oauth/lineNotify'
   }
 
   function unconnectLineNotify(){

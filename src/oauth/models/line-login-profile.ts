@@ -3,4 +3,5 @@ export interface LineLoginProfile {
   displayName: string;
   pictureUrl: string;
   statusMessage: string;
+  email: string;
 }

@@ -9,28 +9,34 @@ html
     link(rel='stylesheet', href="https://bulma.io/vendor/fontawesome-free-5.15.2-web/css/all.min.css")
   body
     div.container.is-max-desktop
-        article.message.is-success
-            div.message-body
-                span#resultMessage
+        if user
+            span Hello #{user.name}
+            article.message.is-success
+                div.message-body
+                    span#resultMessage
 
-        div.control
-            input.input(type="text" placeholder="message")
-            button.button.is-primary(onclick='sendMessage()') Send Message
-
+            div.control
+                input.input(type="text" placeholder="message")
+                button.button.is-primary(onclick='sendMessage()') Send Message
+        else
+            p 後台登入
+            button.button(onclick='login("GOOGLE")') Google Login
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
        
 script.
-
+    function login(){
+        location.href='/admin/oauth/login?type=GOOGLE'
+    }
     async function sendMessage(){
         const message = document.querySelector('input').value;
         if(!message){
             return
         }
-        const result = await axios.post('/oauth/sendMessage', {message})
+        const result = await axios.post('/admin/sendMessage', {message})
         if(result.data.success){
             document.querySelector('input').value = ''
             document.querySelector('article').classList.remove('is-danger')
-            document.querySelector('article').classList.add('is-error')
+            document.querySelector('article').classList.add('is-success')
             document.querySelector('#resultMessage').innerHTML = 'Message has been sent.'
         }else{
             document.querySelector('article').classList.remove('is-success')

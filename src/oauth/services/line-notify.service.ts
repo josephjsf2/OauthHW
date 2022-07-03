@@ -1,53 +1,34 @@
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
+import { BaseOauthService } from './base-oauth.service';
 
 @Injectable()
-export class LineNotifyService {
+export class LineNotifyService extends BaseOauthService {
   authorizeUrl = 'https://notify-bot.line.me/oauth/authorize';
   accessTokenUrl = 'https://notify-bot.line.me/oauth/token';
   revokeUrl = 'https://notify-api.line.me/api/revoke';
   messageUrl = 'https://notify-api.line.me/api/notify';
-  clientId = '';
-  clientSecret = '';
-  redirectUrl = '';
   grant_type = 'code';
   state = '123';
   scope = 'notify';
 
   constructor(
-    private httpService: HttpService,
+    protected httpService: HttpService,
     private configService: ConfigService,
   ) {
+    super(httpService);
     this.clientId = this.configService.get('lineNotifyClientId');
     this.clientSecret = this.configService.get('lineNotifySecret');
-    this.redirectUrl = this.configService.get('lineNotifyCallback');
-  }
-
-  getOauthUrl(): string {
-    return `${this.authorizeUrl}?response_type=${this.grant_type}&client_id=${this.clientId}&redirect_uri=${this.redirectUrl}&scope=${this.scope}&state=${this.state}`;
+    this.redirectUrl = `${this.configService.get(
+      'siteDomain',
+    )}/oauth/lineNotify/callback`;
   }
 
   getAccessToken(code: string) {
-    const params = new URLSearchParams();
-    params.append('grant_type', 'authorization_code');
-    params.append('code', code);
-    params.append('redirect_uri', this.redirectUrl);
-    params.append('client_id', this.clientId);
-    params.append('client_secret', this.clientSecret);
-
-    return this.httpService
-      .post<{ access_token: string }>(this.accessTokenUrl, params, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      })
-      .pipe(
-        map((resp) => resp.data),
-        pluck('access_token'),
-      );
+    return super.getAccessToken(code).pipe(pluck('access_token'));
   }
 
   revokeToken(accessToken: string) {
@@ -68,5 +49,9 @@ export class LineNotifyService {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+  }
+
+  getProfile(token: string): Observable<any> {
+    throw new Error('Method not implemented.');
   }
 }
